@@ -1,0 +1,51 @@
+{
+  "name": "zfont",
+  "version": "1.0.0",
+  "description": "Text rendering plugin for Zdog",
+  "module": "dist/zfont.es.js",
+  "main": "dist/zfont.js",
+  "files": [
+    "dist/zfont.min.js",
+    "dist/zfont.js",
+    "dist/zfont.es.js"
+  ],
+  "scripts": {
+    "start": "rollup -c --watch --environment DEV_SERVER,BUILD:development",
+    "dev": "rollup -c --environment BUILD:development",
+    "build": "npm run dev && npm run build:es && npm run build:min",
+    "build:min": "rollup -c --environment BUILD:production",
+    "build:es": "rollup -c --environment ES_MODULE,BUILD:production"
+  },
+  "dependencies": {
+    "typr.js": "^1.0.0"
+  },
+  "devDependencies": {
+    "rollup": "^1.13.0",
+    "rollup-plugin-alias": "^1.5.1",
+    "rollup-plugin-buble": "^0.19.6",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-node-resolve": "^5.0.1",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-serve": "^1.0.1",
+    "rollup-plugin-uglify": "^6.0.2"
+  },
+  "keywords": [
+    "zdog",
+    "3d",
+    "font",
+    "text",
+    "truetype",
+    "ttf"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaames/zfont.git"
+  },
+  "author": "James Daniel <jamesdaniel.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jaames/zfont/issues"
+  },
+  "homepage": "https://github.com/jaames/zfont"
+}
