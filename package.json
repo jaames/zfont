@@ -1,7 +1,7 @@
 {
   "name": "zfont",
   "version": "1.0.0",
-  "description": "Text rendering plugin for Zdog",
+  "description": "Text plugin for Zdog",
   "module": "dist/zfont.es.js",
   "main": "dist/zfont.js",
   "files": [

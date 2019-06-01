@@ -1,6 +1,6 @@
 /*!
  * Zfont v1.0.0
- * Text rendering plugin for Zdog
+ * Text plugin for Zdog
  * 2019 James Daniel
  * MIT Licensed 
  * github.com/jaames/zfont

@@ -1,6 +1,6 @@
 # Zfont
 
-Text rendering plugin for [Zdog](https://github.com/metafizzy/zdog), via loading TrueType (.ttf) fonts with [Typr.js](https://github.com/photopea/Typr.js)
+Text plugin for [Zdog](https://github.com/metafizzy/zdog)! Renders TrueType (.ttf) fonts via [Typr.js](https://github.com/photopea/Typr.js)
 
 [Features](#features) | [Caveats](#caveats) | [Demo](#demo) | [Installation](#installation) | [Usage](#usage) | [API](#api) | [Todo](#todo) | [Building](#building)
 
@@ -115,7 +115,7 @@ animate();
 
 ### Waiting for Fonts to Load
 
-In most cases you don't have to worry about waiting for fonts to load, as text will magically pop into existence once its font is ready. However, the plugin also provides a `Zdog.waitForFonts()` utility function if you need to delay anything until all the fonts in your scene have finished loading.
+In most cases you don't have to worry about waiting for fonts to load, as text objects will magically pop into existence once their font is ready. However, the plugin also provides a `Zdog.waitForFonts()` utility function if you need to delay anything until all the fonts in your scene have finished loading.
 
 For example, let's adapt the animation loop from the example above so that it doesn't begin until the fonts are ready:
 
@@ -146,11 +146,17 @@ let font = new Zdog.Font({
 
 ##### `measureText(text, fontSize)`
 
-Returns the measurements for the specified string `text` when rendered at `fontSize` (measured in pixels), similar to [`Canvas​Rendering​Context2D.measure​Text()`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/measureText). Returns an object with `width`, `height`, `descender`, `ascender`.
+Get the measurements for the specified string `text` when rendered at `fontSize` (measured in pixels), similar to [`Canvas​Rendering​Context2D.measure​Text()`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/measureText). 
+
+Returns an object with `width`, `height`, `descender`, `ascender`.
 
 ##### `getTextPath(text, fontSize, x=0, y=0, z=0, alignX='left', alignY='bottom')`
 
-Returns am array of [Zdog path commands](https://zzz.dog/shapes#shape-path-commands) for the specified string `text` when rendered at `fontSize` (measured in pixels). (`x`, `y`, `z`) is the origin point of the path, `alignX` is the horizontal text alignment (equivalent to the CSS `text-align` property); either `"left"`, `"center"`, `"right"`, `alignY` is the vertical text alignment; either `"top"`, `"middle"`, `"bottom".`
+Returns an array of [Zdog path commands](https://zzz.dog/shapes#shape-path-commands) for the specified string `text`, when rendered at `fontSize` (measured in pixels).
+
+* (`x`, `y`, `z`) is the origin point of the path
+* `alignX` is the horizontal text alignment (equivalent to the CSS `text-align` property); either `"left"`, `"center"` or `"right"`. 
+* `alignY` is the vertical text alignment; either `"top"`, `"middle"` or `"bottom".`
 
 ##### `waitForLoad()`
 
@@ -170,7 +176,7 @@ new Zdog.Text({
 })
 ```
 
-#### Options
+#### Options
 
 `Zdog.Text` inherits all the options from the [`Zdog.Shape`](https://zzz.dog/api#shape) class, plus a couple of extras:
 
