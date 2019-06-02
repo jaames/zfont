@@ -1,5 +1,5 @@
 /*!
- * Zfont v1.0.1
+ * Zfont v1.1.0
  * Text plugin for Zdog
  * 2019 James Daniel
  * MIT Licensed 
@@ -78,11 +78,11 @@
       var ascender = font.hhea.ascender;
       var lineGap = font.hhea.lineGap;
       var lineHeight = (0 - descender) + ascender;
-      var width = glyphs.reduce(function (advanceWidth, glyphIndex) {
-        // stringToGlyphs returns an array on glyph indices that is the same length as the text string
-        // an index can sometimes be -1 in cases where multiple characters are merged into a single ligature
-        if (glyphIndex > -1 && glyphIndex < advanceWidthTable.length) {
-          advanceWidth += advanceWidthTable[glyphIndex];
+      var width = glyphs.reduce(function (advanceWidth, glyphId) {
+        // stringToGlyphs returns an array on glyph IDs that is the same length as the text string
+        // an ID can sometimes be -1 in cases where multiple characters are merged into a single ligature
+        if (glyphId > -1 && glyphId < advanceWidthTable.length) {
+          advanceWidth += advanceWidthTable[glyphId];
         }
         return advanceWidth;
       }, 0);
@@ -96,6 +96,52 @@
     };
 
     ZdogFont.prototype.getTextPath = function getTextPath (text, fontSize, x, y, z, alignX, alignY) {
+        var assign;
+
+        if ( fontSize === void 0 ) fontSize=64;
+        if ( x === void 0 ) x=0;
+        if ( y === void 0 ) y=0;
+        if ( z === void 0 ) z=0;
+        if ( alignX === void 0 ) alignX='left';
+        if ( alignY === void 0 ) alignY='bottom';
+      if (!this._hasLoaded) {
+        return [];
+      }
+      var glyphs = typr_js.U.stringToGlyphs(this.font, text);
+      var path = typr_js.U.glyphsToPath(this.font, glyphs);
+      (assign = this.getTextOrigin(text, fontSize, x, y, z, alignX, alignY), x = assign[0], y = assign[1], z = assign[2]);
+      return this._convertPathCommands(path, fontSize, x, y, z);
+    };
+
+    ZdogFont.prototype.getTextGlyphs = function getTextGlyphs (text, fontSize, x, y, z, alignX, alignY) {
+        var this$1 = this;
+        var assign;
+
+        if ( fontSize === void 0 ) fontSize=64;
+        if ( x === void 0 ) x=0;
+        if ( y === void 0 ) y=0;
+        if ( z === void 0 ) z=0;
+        if ( alignX === void 0 ) alignX='left';
+        if ( alignY === void 0 ) alignY='bottom';
+      if (!this._hasLoaded) {
+        return [];
+      }
+      var glyphs = typr_js.U.stringToGlyphs(this.font, text);
+      var advanceWidthTable = this.font.hmtx.aWidth;
+      var fontScale = this.getFontScale(fontSize);
+      (assign = this.getTextOrigin(text, fontSize, x, y, z, alignX, alignY), x = assign[0], y = assign[1], z = assign[2]);
+      return glyphs.filter(function (glyph) { return glyph !== -1; }).map(function (glyphId) {
+        var path = typr_js.U.glyphToPath(this$1.font, glyphId);
+        var shape = {
+          translate: {x: x, y: y, z: z},
+          path: this$1._convertPathCommands(path, fontSize, 0, 0, 0)
+        };
+        x += advanceWidthTable[glyphId] * fontScale;
+        return shape;
+      })
+    };
+
+    ZdogFont.prototype.getTextOrigin = function getTextOrigin (text, fontSize, x, y, z, alignX, alignY) {
         if ( fontSize === void 0 ) fontSize=64;
         if ( x === void 0 ) x=0;
         if ( y === void 0 ) y=0;
@@ -103,11 +149,6 @@
         if ( alignX === void 0 ) alignX='left';
         if ( alignY === void 0 ) alignY='bottom';
 
-      if (!this._hasLoaded) {
-        return [];
-      }
-      var glyphs = typr_js.U.stringToGlyphs(this.font, text);
-      var path = typr_js.U.glyphsToPath(this.font, glyphs);
       var ref = this.measureText(text, fontSize);
         var width = ref.width;
         var height = ref.height;
@@ -125,16 +166,16 @@
       }
       switch (alignY) {
         case 'top':
-          y -= height;
+          y += height;
           break;
         case 'middle':
-          y -= height / 2;
+          y += height / 2;
           break;
         case 'bottom':
         default:
           break;
       }
-      return this._convertPathCommands(path, fontSize, x, y, z);
+      return [x, y, z];
     };
 
     // Convert Typr.js path commands to Zdog commands
@@ -152,9 +193,13 @@
       var commands = path.cmds;
       // Apply font scale to all coords
       var coords = path.crds.map(function (coord) { return coord * fontScale; });
+      var startCoord = null;
       var coordOffset = 0;
       return commands.map(function (cmd) {
         var result = null;
+        if (!startCoord) {
+          startCoord = {x: x + coords[coordOffset] * xDir, y: y + coords[coordOffset + 1] * yDir, z: z};
+        }
         switch (cmd) {
           case 'M': // moveTo command
             result = {
@@ -185,11 +230,18 @@
             };
             coordOffset += 4;
             return result;
-          // "Z" commands close the path,
-          // However it looks as though Zdog doesn't use these?
-          case 'Z':
-          default: 
-            return null;
+          case 'Z': // close path
+            if (startCoord) {
+              result = {
+                line: startCoord
+              };
+              startCoord = null;
+            }
+            return result;
+          // unhandled type
+          // currently, #rrggbb and X types (used in multicolor fonts) aren't supported
+          default:
+            return result;
         }
       }).filter(function (cmd) { return cmd !== null; }); // filter out unneeded commands
     };
@@ -223,8 +275,6 @@
     // Zdog.Text class
     var ZdogText = /*@__PURE__*/(function (superclass) {
       function ZdogText(props) {
-        var this$1 = this;
-
         // Set missing props to default values
         props = Zdog.extend({
           font: null,
@@ -244,34 +294,45 @@
           {closed: true,
           visible: false, // hide until font is loaded
           path: []}));
-        this.font = font;
+        this._font = null;
         this._value = value;
         this._fontSize = fontSize;
         this._textAlign = textAlign;
-        this.font.waitForLoad().then(function () {
-          this$1.updateTextPath();
-          this$1.visible = true;
-          // Update and rerender illustration
-          if (this$1.addTo) { 
-            this$1.addTo.updateRenderGraph();
-          }
-        });
+        this.font = font;
       }
 
       if ( superclass ) ZdogText.__proto__ = superclass;
       ZdogText.prototype = Object.create( superclass && superclass.prototype );
       ZdogText.prototype.constructor = ZdogText;
 
-      var prototypeAccessors = { value: { configurable: true },fontSize: { configurable: true },textAlign: { configurable: true } };
+      var prototypeAccessors = { font: { configurable: true },value: { configurable: true },fontSize: { configurable: true },textAlign: { configurable: true } };
 
-      ZdogText.prototype.updateTextPath = function updateTextPath () {
+      ZdogText.prototype.updateText = function updateText () {
         this.path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, 'bottom');
         this.updatePath();
       };
 
+      prototypeAccessors.font.set = function (newFont) {
+        var this$1 = this;
+
+        this._font = newFont;
+        this.font.waitForLoad().then(function () {
+          this$1.updateText();
+          this$1.visible = true;
+          // Update and rerender illustration
+          if (this$1.addTo) { 
+            this$1.addTo.updateRenderGraph();
+          }
+        });
+      };
+
+      prototypeAccessors.font.get = function () {
+        return this._font;
+      };
+
       prototypeAccessors.value.set = function (newValue) {
         this._value = newValue;
-        this.updateTextPath();
+        this.updateText();
       };
       
       prototypeAccessors.value.get = function () {
@@ -280,7 +341,7 @@
 
       prototypeAccessors.fontSize.set = function (newSize) {
         this._fontSize = newSize;
-        this.updateTextPath();
+        this.updateText();
       };
 
       prototypeAccessors.fontSize.get = function () {
@@ -289,7 +350,7 @@
 
       prototypeAccessors.textAlign.set = function (newValue) {
         this._textAlign = newValue;
-        this.updateTextPath();
+        this.updateText();
       };
 
       prototypeAccessors.textAlign.get = function () {
@@ -306,6 +367,156 @@
     return Zdog;
   }
 
+  function objectWithoutProperties$1 (obj, exclude) { var target = {}; for (var k in obj) if (Object.prototype.hasOwnProperty.call(obj, k) && exclude.indexOf(k) === -1) target[k] = obj[k]; return target; }
+  function registerTextGroupClass(Zdog) {
+
+    // Zdog.TextGroup class
+    var ZdogTextGroup = /*@__PURE__*/(function (superclass) {
+      function ZdogTextGroup(props) {
+        // Set missing props to default values
+        props = Zdog.extend({
+          font: null,
+          value: '',
+          fontSize: 64,
+          textAlign: 'left',
+          color: '#333',
+          fill: false,
+          stroke: 1,
+        }, props);
+        // Split props
+        var font = props.font;
+        var value = props.value;
+        var fontSize = props.fontSize;
+        var textAlign = props.textAlign;
+        var color = props.color;
+        var fill = props.fill;
+        var stroke = props.stroke;
+        var rest = objectWithoutProperties$1( props, ["font", "value", "fontSize", "textAlign", "color", "fill", "stroke"] );
+        var groupProps = rest;
+        // Create group object
+        superclass.call(this, Object.assign({}, groupProps,
+          {visible: false}));
+        this._font = null;
+        this._value = value;
+        this._fontSize = fontSize;
+        this._textAlign = textAlign;
+        this._color = color;
+        this._fill = fill;
+        this._stroke = stroke;
+        this.font = font;
+      }
+
+      if ( superclass ) ZdogTextGroup.__proto__ = superclass;
+      ZdogTextGroup.prototype = Object.create( superclass && superclass.prototype );
+      ZdogTextGroup.prototype.constructor = ZdogTextGroup;
+
+      var prototypeAccessors = { font: { configurable: true },value: { configurable: true },fontSize: { configurable: true },textAlign: { configurable: true },color: { configurable: true },fill: { configurable: true },stroke: { configurable: true } };
+
+      ZdogTextGroup.prototype.updateText = function updateText () {
+        var this$1 = this;
+
+        // Remove old children
+        while (this.children.length > 0) {
+          this.removeChild(this.children[0]);
+        }
+        // Get text paths for each glyph
+        var glyphs = this.font.getTextGlyphs(this.value, this.fontSize, 0, 0, 0, this.textAlign, 'bottom');
+        // Convert glyphs to new shapes
+        glyphs.forEach(function (shape) {
+          this$1.addChild(new Zdog.Shape({
+            translate: shape.translate,
+            path: shape.path,
+            color: this$1.color,
+            fill: this$1.fill,
+            stroke: this$1.stroke,
+            closed: true,
+          }));
+        });
+        this.updateFlatGraph();
+      };
+
+      prototypeAccessors.font.set = function (newFont) {
+        var this$1 = this;
+
+        this._font = newFont;
+        this._font.waitForLoad().then(function () {
+          this$1.updateText();
+          this$1.visible = true;
+          // Update and rerender illustration
+          if (this$1.addTo) { 
+            this$1.addTo.updateRenderGraph();
+          }
+        });
+      };
+
+      prototypeAccessors.font.get = function () {
+        return this._font;
+      };
+
+      prototypeAccessors.value.set = function (newValue) {
+        this._value = newValue;
+        this.updateText();
+      };
+      
+      prototypeAccessors.value.get = function () {
+        return this._value;
+      };
+
+      prototypeAccessors.fontSize.set = function (newSize) {
+        this._fontSize = newSize;
+        this.updateText();
+      };
+
+      prototypeAccessors.fontSize.get = function () {
+        return this._fontSize;
+      };
+
+      prototypeAccessors.textAlign.set = function (newValue) {
+        this._textAlign = newValue;
+        this.updateText();
+      };
+
+      prototypeAccessors.textAlign.get = function () {
+        return this._textAlign;
+      };
+
+      prototypeAccessors.color.set = function (newColor) {
+        this._color = newColor;
+        this.children.forEach(function (child) { return child.color = newColor; });
+      };
+
+      prototypeAccessors.color.get = function () {
+        return this._color;
+      };
+
+      prototypeAccessors.fill.set = function (newFill) {
+        this._fill = newFill;
+        this.children.forEach(function (child) { return child.fill = newFill; });
+      };
+
+      prototypeAccessors.fill.get = function () {
+        return this._fill;
+      };
+
+      prototypeAccessors.stroke.set = function (newStroke) {
+        this._stroke = newStroke;
+        this.children.forEach(function (child) { return child.stroke = newStroke; });
+      };
+
+      prototypeAccessors.stroke.get = function () {
+        return this._stroke;
+      };
+
+      Object.defineProperties( ZdogTextGroup.prototype, prototypeAccessors );
+
+      return ZdogTextGroup;
+    }(Zdog.Group));
+
+    ZdogTextGroup.optionKeys = ZdogTextGroup.optionKeys.concat(['color', 'fill', 'stroke', 'font', 'fontSize', 'value', 'textAlign']);
+    Zdog.TextGroup = ZdogTextGroup;
+    return Zdog;
+  }
+
   var index = {
     init: function init(Zdog) {
       // Global font list to keep track of all fonts
@@ -318,10 +529,11 @@
       
       registerFontClass(Zdog);
       registerTextClass(Zdog);
+      registerTextGroupClass(Zdog);
 
       return Zdog;
     },
-    version: "1.0.1",
+    version: "1.1.0",
   };
 
   return index;

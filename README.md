@@ -191,6 +191,10 @@ new Zdog.Text({
 
 `Zdog.Text` inherits all the properties from the [`Zdog.Shape`](https://zzz.dog/api#shape) class, as well as some extras. All of these properties can be updated at any time and the rendered text will update automatically. 
 
+##### `font`
+
+The [`Zdog.Font`](#zdog-font) instance being used for this text.
+
 ##### `value`
 
 Text value as a string.
@@ -202,6 +206,66 @@ Font size, measured in pixels.
 ##### `textAlign`
 
 Horizontal text alignment, equivalent to the CSS `text-align` property. This can be either `'left'`, `'center'` or `'right'`
+
+### Zdog.TextGroup
+
+This class is very similar to [`Zdog.Text`](#zdog-text), except it acts as a [`Zdog.Group`](https://zzz.dog/api#group) instead, and each text glyph is rendered as its own shape. This is helpful for more advanced use-cases where you need control over each character.
+
+```js
+new Zdog.TextGroup({
+  addTo: illo,
+  value: 'Hey, Zdog!',
+  textAlign: 'center',
+  color: '#5222ee',
+  stroke: 2,
+})
+```
+
+#### Options
+
+`Zdog.TextGrup` inherits all the options from the [`Zdog.Group`](https://zzz.dog/api#group) class, plus a few extras:
+
+| Param      | Details | Default |
+|:-----------|:--------|:--------|
+| `font`     | [`Zdog.Font`](#zdog-font) to use for this text. This is required. | `null` |
+| `value`    | Text string | `''` |
+| `fontSize` | Text size, measured in pixels | `64` |
+| `textAlign`| Horizontal text alignment, equivalent to the CSS `text-align` property. This can be either `'left'`, `'center'` or `'right'` | `'left'` |
+| `color` | Text color | `#333` |
+| `fill` | Text fill | `false` |
+| `stroke` | Text stroke | `stroke` |
+
+#### Properties
+
+`Zdog.TextGroup` inherits all the properties from the [`Zdog.Group`](https://zzz.dog/api#group) class, as well as some extras. All of these properties can be updated at any time and the rendered text will update automatically. 
+
+##### `font`
+
+The [`Zdog.Font`](#zdog-font) instance being used for this text.
+
+##### `value`
+
+Text value as a string.
+
+##### `fontSize`
+
+Font size, measured in pixels.
+
+##### `textAlign`
+
+Horizontal text alignment, equivalent to the CSS `text-align` property. This can be either `'left'`, `'center'` or `'right'`
+
+##### `color`
+
+Text color, equivalent to [`Shape.color`](https://zzz.dog/api#shape-color). Setting this will update the color for all of the group's children.
+
+##### `fill`
+
+Text fill, equivalent to [`Shape.fill`](https://zzz.dog/api#shape-fill). Setting this will update the fill for all of the group's children.
+
+##### `stroke`
+
+Text stroke, equivalent to [`Shape.stroke`](https://zzz.dog/api#shape-stroke). Setting this will update the stroke for all of the group's children.
 
 ### Zdog.waitForFonts
 
@@ -218,7 +282,6 @@ Zdog.waitForFonts().then(function() {
 * Live demo + landing page (in progress!)
 * Google Fonts support?
 * Multiline text
-* Ability to render each glpyh in a string as a seperate object, combined into a group
 * Support for different text directions, e.g. right-to-left
 * Support for fallback fonts?
 * Support for colored (SVG) fonts

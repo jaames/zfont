@@ -59,11 +59,11 @@ export function registerFontClass(Zdog) {
       const ascender = font.hhea.ascender;
       const lineGap = font.hhea.lineGap;
       const lineHeight = (0 - descender) + ascender;
-      const width = glyphs.reduce((advanceWidth, glyphIndex) => {
-        // stringToGlyphs returns an array on glyph indices that is the same length as the text string
-        // an index can sometimes be -1 in cases where multiple characters are merged into a single ligature
-        if (glyphIndex > -1 && glyphIndex < advanceWidthTable.length) {
-          advanceWidth += advanceWidthTable[glyphIndex];
+      const width = glyphs.reduce((advanceWidth, glyphId) => {
+        // stringToGlyphs returns an array on glyph IDs that is the same length as the text string
+        // an ID can sometimes be -1 in cases where multiple characters are merged into a single ligature
+        if (glyphId > -1 && glyphId < advanceWidthTable.length) {
+          advanceWidth += advanceWidthTable[glyphId];
         }
         return advanceWidth;
       }, 0);
@@ -82,6 +82,30 @@ export function registerFontClass(Zdog) {
       }
       const glyphs = Typr.U.stringToGlyphs(this.font, text);
       const path = Typr.U.glyphsToPath(this.font, glyphs);
+      [x, y, z] = this.getTextOrigin(text, fontSize, x, y, z, alignX, alignY);
+      return this._convertPathCommands(path, fontSize, x, y, z);
+    }
+
+    getTextGlyphs(text, fontSize=64, x=0, y=0, z=0, alignX='left', alignY='bottom') {
+      if (!this._hasLoaded) {
+        return [];
+      }
+      const glyphs = Typr.U.stringToGlyphs(this.font, text);
+      const advanceWidthTable = this.font.hmtx.aWidth;
+      const fontScale = this.getFontScale(fontSize);
+      [x, y, z] = this.getTextOrigin(text, fontSize, x, y, z, alignX, alignY);
+      return glyphs.filter(glyph => glyph !== -1).map(glyphId => {
+        const path = Typr.U.glyphToPath(this.font, glyphId);
+        const shape = {
+          translate: {x, y, z},
+          path: this._convertPathCommands(path, fontSize, 0, 0, 0)
+        };
+        x += advanceWidthTable[glyphId] * fontScale;
+        return shape;
+      })
+    }
+
+    getTextOrigin(text, fontSize=64, x=0, y=0, z=0, alignX='left', alignY='bottom') {
       const { width, height, descender } = this.measureText(text, fontSize);
       switch (alignX) {
         case 'right':
@@ -96,16 +120,16 @@ export function registerFontClass(Zdog) {
       }
       switch (alignY) {
         case 'top':
-          y -= height;
+          y += height;
           break;
         case 'middle':
-          y -= height / 2;
+          y += height / 2;
           break;
         case 'bottom':
         default:
           break;
       }
-      return this._convertPathCommands(path, fontSize, x, y, z);
+      return [x, y, z];
     }
 
     // Convert Typr.js path commands to Zdog commands
@@ -119,9 +143,13 @@ export function registerFontClass(Zdog) {
       const commands = path.cmds;
       // Apply font scale to all coords
       const coords = path.crds.map(coord => coord * fontScale);
+      let startCoord = null;
       let coordOffset = 0;
-      return commands.map(cmd => {
+      return commands.map((cmd) => {
         let result = null;
+        if (!startCoord) {
+          startCoord = {x: x + coords[coordOffset] * xDir, y: y + coords[coordOffset + 1] * yDir, z};
+        }
         switch (cmd) {
           case 'M': // moveTo command
             result = {
@@ -154,11 +182,18 @@ export function registerFontClass(Zdog) {
             };
             coordOffset += 4;
             return result;
-          // "Z" commands close the path,
-          // However it looks as though Zdog doesn't use these?
-          case 'Z':
-          default: 
-            return null;
+          case 'Z': // close path
+            if (startCoord) {
+              result = {
+                line: startCoord
+              };
+              startCoord = null;
+            }
+            return result;
+          // unhandled type
+          // currently, #rrggbb and X types (used in multicolor fonts) aren't supported
+          default:
+            return result;
         }
       }).filter(cmd => cmd !== null); // filter out unneeded commands
     }

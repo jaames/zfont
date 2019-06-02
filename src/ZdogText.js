@@ -25,12 +25,22 @@ export function registerTextClass(Zdog) {
         visible: false, // hide until font is loaded
         path: []
       });
-      this.font = font;
+      this._font = null;
       this._value = value;
       this._fontSize = fontSize;
       this._textAlign = textAlign;
+      this.font = font;
+    }
+
+    updateText() {
+      this.path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, 'bottom');
+      this.updatePath();
+    }
+
+    set font(newFont) {
+      this._font = newFont;
       this.font.waitForLoad().then(() => {
-        this.updateTextPath();
+        this.updateText();
         this.visible = true;
         // Update and rerender illustration
         if (this.addTo) { 
@@ -39,14 +49,13 @@ export function registerTextClass(Zdog) {
       });
     }
 
-    updateTextPath() {
-      this.path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, 'bottom');
-      this.updatePath();
+    get font() {
+      return this._font;
     }
 
     set value(newValue) {
       this._value = newValue;
-      this.updateTextPath();
+      this.updateText();
     }
     
     get value() {
@@ -55,7 +64,7 @@ export function registerTextClass(Zdog) {
 
     set fontSize(newSize) {
       this._fontSize = newSize;
-      this.updateTextPath();
+      this.updateText();
     }
 
     get fontSize() {
@@ -64,7 +73,7 @@ export function registerTextClass(Zdog) {
 
     set textAlign(newValue) {
       this._textAlign = newValue;
-      this.updateTextPath();
+      this.updateText();
     }
 
     get textAlign() {

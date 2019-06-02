@@ -1,5 +1,6 @@
 import { registerFontClass } from './ZdogFont';
 import { registerTextClass } from './ZdogText';
+import { registerTextGroupClass } from './ZdogTextGroup';
 
 export default {
   init(Zdog) {
@@ -13,6 +14,7 @@ export default {
     
     registerFontClass(Zdog);
     registerTextClass(Zdog);
+    registerTextGroupClass(Zdog);
 
     return Zdog;
   },
