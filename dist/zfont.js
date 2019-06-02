@@ -1,5 +1,5 @@
 /*!
- * Zfont v1.0.0
+ * Zfont v1.0.1
  * Text plugin for Zdog
  * 2019 James Daniel
  * MIT Licensed 
@@ -301,7 +301,7 @@
       return ZdogText;
     }(Zdog.Shape));
 
-    ZdogText.optionKeys = ZdogText.optionKeys.concat(['font', 'fontSize', 'text', 'textAlign']);
+    ZdogText.optionKeys = ZdogText.optionKeys.concat(['font', 'fontSize', 'value', 'textAlign']);
     Zdog.Text = ZdogText;
     return Zdog;
   }
@@ -321,7 +321,7 @@
 
       return Zdog;
     },
-    version: "1.0.0",
+    version: "1.0.1",
   };
 
   return index;

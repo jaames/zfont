@@ -72,7 +72,7 @@ export function registerTextClass(Zdog) {
     }
   }
 
-  ZdogText.optionKeys = ZdogText.optionKeys.concat(['font', 'fontSize', 'text', 'textAlign']);
+  ZdogText.optionKeys = ZdogText.optionKeys.concat(['font', 'fontSize', 'value', 'textAlign']);
   Zdog.Text = ZdogText;
   return Zdog;
 }
