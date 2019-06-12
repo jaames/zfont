@@ -160,11 +160,19 @@ Zdog.waitForFonts().then(function() {
 
 ### Zdog.Font
 
+Represents a font that can be used by an instance of either [`Zdog.Text`](#zdogtext) or [`Zdog.TextGroup`](#zdogtextgroup).
+
 ```js
 let font = new Zdog.Font({
   src: './path/to/font.ttf'
 })
 ```
+
+#### Options
+
+| Param      | Details | Default |
+|:-----------|:--------|:--------|
+| `src`      | Font URL path. This can be a `.ttf` or `.otf` font, check out the [Typr.js repo](https://github.com/photopea/Typr.js) for more details about font support | `''` |
 
 #### Methods
 
@@ -193,6 +201,7 @@ An object used for rendering text. It inherits everything from the [`Zdog.Shape`
 ```js
 new Zdog.Text({
   addTo: illo,
+  font: font,
   value: 'Hey, Zdog!',
   textAlign: 'center',
   color: '#5222ee',
@@ -243,6 +252,7 @@ This class is very similar to [`Zdog.Text`](#zdog-text), except it acts as a [`Z
 ```js
 new Zdog.TextGroup({
   addTo: illo,
+  font: font,
   value: 'Hey, Zdog!',
   textAlign: 'center',
   color: '#5222ee',
