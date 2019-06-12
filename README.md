@@ -117,7 +117,7 @@ animate();
 
 In most cases you don't have to worry about waiting for fonts to load, as text objects will magically pop into existence once their font is ready. However, the plugin also provides a `Zdog.waitForFonts()` utility function if you need to delay anything until all the fonts in your scene have finished loading.
 
-For example, let's adapt the animation loop from the example above so that it doesn't begin until the fonts are ready:
+For example, let's adapt the animation loop from the previous example so that it doesn't begin until the fonts are ready:
 
 ```js
 // Animation loop
@@ -125,7 +125,7 @@ function animate() {
   illo.updateRenderGraph();
   requestAnimationFrame(animate);
 }
-// Zdog.waitForFonts() returns a Promise which is resolved once all the fonts added to the scene so far have ben loaded
+// Zdog.waitForFonts() returns a Promise which is resolved once all the fonts added to the scene so far have been loaded
 Zdog.waitForFonts().then(function() {
   // Once the fonts are done, start the animation loop
   animate();

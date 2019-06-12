@@ -10,6 +10,7 @@ export function registerTextGroupClass(Zdog) {
         value: '',
         fontSize: 64,
         textAlign: 'left',
+        textBaseline: 'bottom',
         color: '#333',
         fill: false,
         stroke: 1,
@@ -20,6 +21,7 @@ export function registerTextGroupClass(Zdog) {
         value,
         fontSize,
         textAlign,
+        textBaseline,
         color,
         fill,
         stroke,
@@ -34,6 +36,7 @@ export function registerTextGroupClass(Zdog) {
       this._value = value;
       this._fontSize = fontSize;
       this._textAlign = textAlign;
+      this._textBaseline = textBaseline;
       this._color = color;
       this._fill = fill;
       this._stroke = stroke;
@@ -46,7 +49,7 @@ export function registerTextGroupClass(Zdog) {
         this.removeChild(this.children[0]);
       }
       // Get text paths for each glyph
-      const glyphs = this.font.getTextGlyphs(this.value, this.fontSize, 0, 0, 0, this.textAlign, 'bottom');
+      const glyphs = this.font.getTextGlyphs(this.value, this.fontSize, 0, 0, 0, this.textAlign, this.textBaseline);
       // Convert glyphs to new shapes
       glyphs.forEach(shape => {
         this.addChild(new Zdog.Shape({
@@ -104,6 +107,15 @@ export function registerTextGroupClass(Zdog) {
       return this._textAlign;
     }
 
+    set textBaseline(newValue) {
+      this._textBaseline = newValue;
+      this.updateText();
+    }
+
+    get textBaseline() {
+      return this._textBaseline;
+    }
+
     set color(newColor) {
       this._color = newColor;
       this.children.forEach(child => child.color = newColor);
@@ -132,7 +144,7 @@ export function registerTextGroupClass(Zdog) {
     }
   }
 
-  ZdogTextGroup.optionKeys = ZdogTextGroup.optionKeys.concat(['color', 'fill', 'stroke', 'font', 'fontSize', 'value', 'textAlign']);
+  ZdogTextGroup.optionKeys = ZdogTextGroup.optionKeys.concat(['color', 'fill', 'stroke', 'font', 'fontSize', 'value', 'textAlign', 'textBaseline']);
   Zdog.TextGroup = ZdogTextGroup;
   return Zdog;
 }

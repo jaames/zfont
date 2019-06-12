@@ -59,7 +59,7 @@ module.exports = {
     nodeResolve(),
     commonjs(),
     devserver ? serve({
-      contentBase: ['dist', 'test']
+      contentBase: ['dist', 'demo']
     }) : false,
     devserver ? livereload() : false,
     // only minify if we're producing a non-es production build

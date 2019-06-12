@@ -1,5 +1,7 @@
 import Typr from 'typr.js';
 
+const TEXT_NEWLINE_REXEG = /\r?\n/;
+
 export function registerFontClass(Zdog) {
   // Zdog.Font class
   class ZdogFont {
@@ -51,26 +53,34 @@ export function registerFontClass(Zdog) {
       if (!this._hasLoaded) {
         return null;
       }
+      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
       const font = this.font;
       const advanceWidthTable = font.hmtx.aWidth;
-      const glyphs = Typr.U.stringToGlyphs(this.font, text);
       const fontScale = this.getFontScale(fontSize);
       const descender = font.hhea.descender;
       const ascender = font.hhea.ascender;
       const lineGap = font.hhea.lineGap;
+      const lineWidths = lines.map(line => {
+        const glyphs = Typr.U.stringToGlyphs(this.font, line);
+        return glyphs.reduce((advanceWidth, glyphId) => {
+          // stringToGlyphs returns an array on glyph IDs that is the same length as the text string
+          // an ID can sometimes be -1 in cases where multiple characters are merged into a single ligature
+          if (glyphId > -1 && glyphId < advanceWidthTable.length) {
+            advanceWidth += advanceWidthTable[glyphId];
+          }
+          return advanceWidth;
+        }, 0);
+      });
+      const width = Math.max(...lineWidths);
       const lineHeight = (0 - descender) + ascender;
-      const width = glyphs.reduce((advanceWidth, glyphId) => {
-        // stringToGlyphs returns an array on glyph IDs that is the same length as the text string
-        // an ID can sometimes be -1 in cases where multiple characters are merged into a single ligature
-        if (glyphId > -1 && glyphId < advanceWidthTable.length) {
-          advanceWidth += advanceWidthTable[glyphId];
-        }
-        return advanceWidth;
-      }, 0);
+      const height = lineHeight * lines.length;
+      
       // Multiply by fontScale to convert from font units to pixels
       return {
-        height: lineHeight * fontScale,
         width: width * fontScale,
+        height: height * fontScale,
+        lineHeight: lineHeight * fontScale,
+        lineWidths: lineWidths.map(width => width * fontScale),
         descender: descender * fontScale,
         ascender: ascender * fontScale,
       };
@@ -80,33 +90,53 @@ export function registerFontClass(Zdog) {
       if (!this._hasLoaded) {
         return [];
       }
-      const glyphs = Typr.U.stringToGlyphs(this.font, text);
-      const path = Typr.U.glyphsToPath(this.font, glyphs);
-      [x, y, z] = this.getTextOrigin(text, fontSize, x, y, z, alignX, alignY);
-      return this._convertPathCommands(path, fontSize, x, y, z);
+      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
+      const measurements = this.measureText(text, fontSize);
+      const lineWidths = measurements.lineWidths;
+      const lineHeight = measurements.lineHeight;
+      return lines.map((line, lineIndex) => {
+        const [_x, _y, _z] = this.getTextOrigin({
+          ...measurements,
+          width: lineWidths[lineIndex],
+        }, x, y, z, alignX, alignY);
+        y += lineHeight;
+        const glyphs = Typr.U.stringToGlyphs(this.font, line);
+        const path = Typr.U.glyphsToPath(this.font, glyphs);
+        return this._convertPathCommands(path, fontSize, _x, _y, z);
+      }).flat();
     }
 
     getTextGlyphs(text, fontSize=64, x=0, y=0, z=0, alignX='left', alignY='bottom') {
       if (!this._hasLoaded) {
         return [];
       }
-      const glyphs = Typr.U.stringToGlyphs(this.font, text);
+      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
+      const measurements = this.measureText(text, fontSize);
       const advanceWidthTable = this.font.hmtx.aWidth;
       const fontScale = this.getFontScale(fontSize);
-      [x, y, z] = this.getTextOrigin(text, fontSize, x, y, z, alignX, alignY);
-      return glyphs.filter(glyph => glyph !== -1).map(glyphId => {
-        const path = Typr.U.glyphToPath(this.font, glyphId);
-        const shape = {
-          translate: {x, y, z},
-          path: this._convertPathCommands(path, fontSize, 0, 0, 0)
-        };
-        x += advanceWidthTable[glyphId] * fontScale;
-        return shape;
-      })
+      const lineWidths = measurements.lineWidths;
+      const lineHeight = measurements.lineHeight;
+      return lines.map((line, lineIndex) => {
+        const glyphs = Typr.U.stringToGlyphs(this.font, line);
+        let [_x, _y, _z] = this.getTextOrigin({
+          ...measurements,
+          width: lineWidths[lineIndex]
+        }, x, y, z, alignX, alignY);
+        y += lineHeight;
+        return glyphs.filter(glyph => glyph !== -1).map(glyphId => {
+          const path = Typr.U.glyphToPath(this.font, glyphId);
+          const shape = {
+            translate: {x:_x, y: _y, z:_z},
+            path: this._convertPathCommands(path, fontSize, 0, 0, 0)
+          };
+          _x += advanceWidthTable[glyphId] * fontScale;
+          return shape;
+        });
+      }).flat(); 
     }
 
-    getTextOrigin(text, fontSize=64, x=0, y=0, z=0, alignX='left', alignY='bottom') {
-      const { width, height, descender } = this.measureText(text, fontSize);
+    getTextOrigin(measuement, x=0, y=0, z=0, alignX='left', alignY='bottom') {
+      let { width, height, lineHeight } = measuement;
       switch (alignX) {
         case 'right':
           x -= width;
@@ -120,13 +150,14 @@ export function registerFontClass(Zdog) {
       }
       switch (alignY) {
         case 'top':
-          y += height;
+          // y += lineHeight;
           break;
         case 'middle':
-          y += height / 2;
+          y -= (height / 2)  - lineHeight;
           break;
         case 'bottom':
         default:
+          y -= height - lineHeight;
           break;
       }
       return [x, y, z];
