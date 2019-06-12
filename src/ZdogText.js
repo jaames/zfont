@@ -8,7 +8,8 @@ export function registerTextClass(Zdog) {
         font: null,
         value: '',
         fontSize: 64,
-        textAlign: 'left'
+        textAlign: 'left',
+        textBaseline: 'bottom',
       }, props);
       // Split props
       const {
@@ -16,6 +17,7 @@ export function registerTextClass(Zdog) {
         value,
         fontSize,
         textAlign,
+        textBaseline,
         ...shapeProps
       } = props;
       // Create shape object
@@ -29,11 +31,12 @@ export function registerTextClass(Zdog) {
       this._value = value;
       this._fontSize = fontSize;
       this._textAlign = textAlign;
+      this._textBaseline = textBaseline;
       this.font = font;
     }
 
     updateText() {
-      this.path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, 'bottom');
+      this.path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, this.textBaseline);
       this.updatePath();
     }
 
@@ -42,9 +45,14 @@ export function registerTextClass(Zdog) {
       this.font.waitForLoad().then(() => {
         this.updateText();
         this.visible = true;
-        // Update and rerender illustration
-        if (this.addTo) { 
-          this.addTo.updateRenderGraph();
+        // Find root Zdog.Illustration instance
+        let root = this.addTo;
+        while (root.addTo !== undefined) {
+          root = root.addTo;
+        }
+        // Update render graph
+        if (root && typeof root.updateRenderGraph === 'function') {
+          root.updateRenderGraph();
         }
       });
     }
@@ -79,9 +87,18 @@ export function registerTextClass(Zdog) {
     get textAlign() {
       return this._textAlign;
     }
+
+    set textBaseline(newValue) {
+      this._textBaseline = newValue;
+      this.updateText();
+    }
+
+    get textBaseline() {
+      return this._textBaseline;
+    }
   }
 
-  ZdogText.optionKeys = ZdogText.optionKeys.concat(['font', 'fontSize', 'value', 'textAlign']);
+  ZdogText.optionKeys = ZdogText.optionKeys.concat(['font', 'fontSize', 'value', 'textAlign', 'textBaseline']);
   Zdog.Text = ZdogText;
   return Zdog;
 }

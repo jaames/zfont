@@ -1,21 +1,21 @@
 # Zfont
 
-Text plugin for [Zdog](https://github.com/metafizzy/zdog)! Renders TrueType (.ttf) fonts via [Typr.js](https://github.com/photopea/Typr.js)
+Text plugin for [Zdog](https://github.com/metafizzy/zdog)! Renders TrueType fonts via [Typr.js](https://github.com/photopea/Typr.js)
 
-[Features](#features) | [Caveats](#caveats) | [Demo](#demo) | [Installation](#installation) | [Usage](#usage) | [API](#api) | [Todo](#todo) | [Building](#building)
+[Features](#features) | [Caveats](#caveats) | [Demo](#demo) | [Installation](#installation) | [Usage](#usage) | [API](#api) | [Zdog.Font](#zdogfont) | [Zdog.Text](#zdogtext) | [Zdog.TextGroup](#zdogtextgroup) | [Todo](#todo) | [Building](#building)
 
 ## Features
 
-* Built on top of [Typr.js](https://github.com/photopea/Typr.js), which supports a wide range of .ttf fonts and is pretty fast too!
-* Don't worry about waiting for fonts to load, text automatically pops into existence once the font is ready
+* Built on top of [Typr.js](https://github.com/photopea/Typr.js), which supports a wide range of .ttf and .otf fonts and is super quick
+* Less than 14kB minified + gzipped
+* No need to worry about waiting for fonts to load; text automatically pops into existence once the font is ready
+* Includes support for multiline text
 * Update text, color, alignment, etc at any time
-* Includes utilities to measure text
-* 40kB minified
+* Bonus utilities for measuring text, waiting for font load & more!
 
 ## Caveats
 
 * You have to provide a .ttf to use yourself; it isn't possible to use system fonts
-* No multiline support (but it will come soon!)
 * Character range is limited to whichever glyphs are supported by your chosen font, and font stacks/fallbacks aren't supported
 
 ## Demo
@@ -51,10 +51,10 @@ When manually including the library like this, it will be globally available on 
 ### Download and Host Yourself
 
 **[Development version](https://raw.githubusercontent.com/jaames/zfont/master/dist/zfont.js)**<br/>
-Uncompressed at around 70kB, with source comments included
+Uncompressed at around 75kB, with source comments included
 
 **[Production version](https://raw.githubusercontent.com/jaames/zfont/master/dist/zfont.min.js)**<br/>
-Minified to 42kB
+Minified to 45kB
 
 Then add it to the `<head>` of your page with a `<script>` tag:
 
@@ -103,7 +103,7 @@ new Zdog.Text({
   value: 'Hey, Zdog!',
   fontSize: 64,
   color: '#fff'
-})
+});
 
 // Animation loop
 function animate() {
@@ -113,11 +113,35 @@ function animate() {
 animate();
 ```
 
+### Multiline Text
+
+Both `Zdog.Text` and `Zdog.TextGroup` support multiline text. Simply insert a newline character (`\n`) wherever you wish to add a line break:
+
+```js
+new Zdog.Text({
+  ...
+  value: 'The quick brown fox\njumped over the\nlazy sleeping zdog',
+});
+```
+
+For better readability you may prefer to use an array of strings for the `value` option. In this case, each string in the array will be treated as a seperate line of text:
+
+```js
+new Zdog.Text({
+  ...
+  value: [
+    'The quick brown fox'
+    'jumped over the',
+    'lazy sleeping zdog'
+  ]
+});
+```
+
 ### Waiting for Fonts to Load
 
 In most cases you don't have to worry about waiting for fonts to load, as text objects will magically pop into existence once their font is ready. However, the plugin also provides a `Zdog.waitForFonts()` utility function if you need to delay anything until all the fonts in your scene have finished loading.
 
-For example, let's adapt the animation loop from the example above so that it doesn't begin until the fonts are ready:
+For example, let's adapt the animation loop from the previous example so that it doesn't begin until the fonts are ready:
 
 ```js
 // Animation loop
@@ -125,7 +149,7 @@ function animate() {
   illo.updateRenderGraph();
   requestAnimationFrame(animate);
 }
-// Zdog.waitForFonts() returns a Promise which is resolved once all the fonts added to the scene so far have ben loaded
+// Zdog.waitForFonts() returns a Promise which is resolved once all the fonts added to the scene so far have been loaded
 Zdog.waitForFonts().then(function() {
   // Once the fonts are done, start the animation loop
   animate();
@@ -136,11 +160,19 @@ Zdog.waitForFonts().then(function() {
 
 ### Zdog.Font
 
+Represents a font that can be used by an instance of either [`Zdog.Text`](#zdogtext) or [`Zdog.TextGroup`](#zdogtextgroup).
+
 ```js
 let font = new Zdog.Font({
   src: './path/to/font.ttf'
 })
 ```
+
+#### Options
+
+| Param      | Details | Default |
+|:-----------|:--------|:--------|
+| `src`      | Font URL path. This can be a `.ttf` or `.otf` font, check out the [Typr.js repo](https://github.com/photopea/Typr.js) for more details about font support | `''` |
 
 #### Methods
 
@@ -169,6 +201,7 @@ An object used for rendering text. It inherits everything from the [`Zdog.Shape`
 ```js
 new Zdog.Text({
   addTo: illo,
+  font: font,
   value: 'Hey, Zdog!',
   textAlign: 'center',
   color: '#5222ee',
@@ -186,6 +219,7 @@ new Zdog.Text({
 | `value`    | Text string | `''` |
 | `fontSize` | Text size, measured in pixels | `64` |
 | `textAlign`| Horizontal text alignment, equivalent to the CSS `text-align` property. This can be either `'left'`, `'center'` or `'right'` | `'left'` |
+| `textBaseline`| Vertical text alignment, equivalent to the HTML5 canvas' [`textBaseline`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline) property. This can be either `'top'`, `'middle'` or `'bottom'` | `'bottom'` |
 
 #### Properties
 
@@ -207,6 +241,10 @@ Font size, measured in pixels.
 
 Horizontal text alignment, equivalent to the CSS `text-align` property. This can be either `'left'`, `'center'` or `'right'`
 
+##### `textBaseline`
+
+Vertical text alignment, equivalent to the HTML5 canvas' [`textBaseline`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline) property. This can be either `'top'`, `'middle'` or `'bottom'`
+
 ### Zdog.TextGroup
 
 This class is very similar to [`Zdog.Text`](#zdog-text), except it acts as a [`Zdog.Group`](https://zzz.dog/api#group) instead, and each text glyph is rendered as its own shape. This is helpful for more advanced use-cases where you need control over each character.
@@ -214,6 +252,7 @@ This class is very similar to [`Zdog.Text`](#zdog-text), except it acts as a [`Z
 ```js
 new Zdog.TextGroup({
   addTo: illo,
+  font: font,
   value: 'Hey, Zdog!',
   textAlign: 'center',
   color: '#5222ee',
@@ -223,7 +262,7 @@ new Zdog.TextGroup({
 
 #### Options
 
-`Zdog.TextGrup` inherits all the options from the [`Zdog.Group`](https://zzz.dog/api#group) class, plus a few extras:
+`Zdog.TextGroup` inherits all the options from the [`Zdog.Group`](https://zzz.dog/api#group) class, plus a few extras:
 
 | Param      | Details | Default |
 |:-----------|:--------|:--------|
@@ -231,6 +270,7 @@ new Zdog.TextGroup({
 | `value`    | Text string | `''` |
 | `fontSize` | Text size, measured in pixels | `64` |
 | `textAlign`| Horizontal text alignment, equivalent to the CSS `text-align` property. This can be either `'left'`, `'center'` or `'right'` | `'left'` |
+| `textBaseline`| Vertical text alignment, equivalent to the HTML5 canvas' [`textBaseline`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline) property. This can be either `'top'`, `'middle'` or `'bottom'` | `'bottom'` |
 | `color` | Text color | `#333` |
 | `fill` | Text fill | `false` |
 | `stroke` | Text stroke | `stroke` |
@@ -254,6 +294,10 @@ Font size, measured in pixels.
 ##### `textAlign`
 
 Horizontal text alignment, equivalent to the CSS `text-align` property. This can be either `'left'`, `'center'` or `'right'`
+
+##### `textBaseline`
+
+Vertical text alignment, equivalent to the HTML5 canvas' [`textBaseline`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/textBaseline) property. This can be either `'top'`, `'middle'` or `'bottom'`
 
 ##### `color`
 
@@ -281,7 +325,6 @@ Zdog.waitForFonts().then(function() {
 
 * Live demo + landing page (in progress!)
 * Google Fonts support?
-* Multiline text
 * Support for different text directions, e.g. right-to-left
 * Support for fallback fonts?
 * Support for colored (SVG) fonts
