@@ -2,7 +2,7 @@
 
 Text plugin for [Zdog](https://github.com/metafizzy/zdog)! Renders TrueType fonts via [Typr.js](https://github.com/photopea/Typr.js)
 
-[Features](#features) | [Caveats](#caveats) | [Demo](#demo) | [Installation](#installation) | [Usage](#usage) | [API](#api) | [Todo](#todo) | [Building](#building)
+[Features](#features) | [Caveats](#caveats) | [Demo](#demo) | [Installation](#installation) | [Usage](#usage) | [API](#api) | [Zdog.Font](#zdogfont) | [Zdog.Text](#zdogtext) | [Zdog.TextGroup](#zdogtextgroup) | [Todo](#todo) | [Building](#building)
 
 ## Features
 
