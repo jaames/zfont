@@ -1,4 +1,5 @@
 import { version, description } from './package.json';
+import filesize from 'rollup-plugin-filesize';
 import buble from 'rollup-plugin-buble';
 import alias from 'rollup-plugin-alias';
 import commonjs from 'rollup-plugin-commonjs';
@@ -62,6 +63,8 @@ module.exports = {
       contentBase: ['dist', 'demo']
     }) : false,
     devserver ? livereload() : false,
+    // show filesize stats when building dist files
+    !devserver ? filesize() : false,
     // only minify if we're producing a non-es production build
     prod && !esmodule ? uglify({
       output: {

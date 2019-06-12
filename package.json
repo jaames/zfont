@@ -17,6 +17,7 @@
     "build:es": "rollup -c --environment ES_MODULE,BUILD:production"
   },
   "dependencies": {
+    "rollup-plugin-filesize": "^6.1.0",
     "typr.js": "^1.0.0"
   },
   "devDependencies": {
