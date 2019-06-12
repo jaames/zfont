@@ -1,4 +1,5 @@
-# Zfont
+
+<h1 align="center"><a href="https://github.com/jaames/zfont" target="blank"><img height="340" src="https://raw.githubusercontent.com/jaames/zfont/master/assets/banner.png"/><br/>Zfont</a></h1>
 
 Text plugin for [Zdog](https://github.com/metafizzy/zdog)! Renders TrueType fonts via [Typr.js](https://github.com/photopea/Typr.js)
 
