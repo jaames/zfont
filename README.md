@@ -252,7 +252,7 @@ new Zdog.TextGroup({
 
 #### Options
 
-`Zdog.TextGrup` inherits all the options from the [`Zdog.Group`](https://zzz.dog/api#group) class, plus a few extras:
+`Zdog.TextGroup` inherits all the options from the [`Zdog.Group`](https://zzz.dog/api#group) class, plus a few extras:
 
 | Param      | Details | Default |
 |:-----------|:--------|:--------|
