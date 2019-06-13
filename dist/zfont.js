@@ -1,5 +1,5 @@
 /*!
- * Zfont v1.2.0
+ * Zfont v1.2.1
  * Text plugin for Zdog
  * 2019 James Daniel
  * MIT Licensed 
@@ -493,9 +493,14 @@
         this._font.waitForLoad().then(function () {
           this$1.updateText();
           this$1.visible = true;
-          // Update and rerender illustration
-          if (this$1.addTo) { 
-            this$1.addTo.updateRenderGraph();
+          // Find root Zdog.Illustration instance
+          var root = this$1.addTo;
+          while (root.addTo !== undefined) {
+            root = root.addTo;
+          }
+          // Update render graph
+          if (root && typeof root.updateRenderGraph === 'function') {
+            root.updateRenderGraph();
           }
         });
       };
@@ -593,7 +598,7 @@
 
       return Zdog;
     },
-    version: "1.2.0",
+    version: "1.2.1",
   };
 
   return index;

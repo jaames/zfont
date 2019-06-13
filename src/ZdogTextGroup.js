@@ -69,9 +69,14 @@ export function registerTextGroupClass(Zdog) {
       this._font.waitForLoad().then(() => {
         this.updateText();
         this.visible = true;
-        // Update and rerender illustration
-        if (this.addTo) { 
-          this.addTo.updateRenderGraph();
+        // Find root Zdog.Illustration instance
+        let root = this.addTo;
+        while (root.addTo !== undefined) {
+          root = root.addTo;
+        }
+        // Update render graph
+        if (root && typeof root.updateRenderGraph === 'function') {
+          root.updateRenderGraph();
         }
       });
     }
