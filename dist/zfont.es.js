@@ -1,5 +1,5 @@
 /*!
- * Zfont v1.2.2
+ * Zfont v1.2.3
  * Text plugin for Zdog
  * 2019 James Daniel
  * MIT Licensed 
@@ -592,7 +592,7 @@ var index = {
 
     return Zdog;
   },
-  version: "1.2.2",
+  version: "1.2.3",
 };
 
 export default index;

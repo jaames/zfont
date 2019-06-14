@@ -1,6 +1,6 @@
 {
   "name": "zfont",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Text plugin for Zdog",
   "module": "dist/zfont.es.js",
   "main": "dist/zfont.js",
@@ -17,7 +17,6 @@
     "build:es": "rollup -c --environment ES_MODULE,BUILD:production"
   },
   "dependencies": {
-    "rollup-plugin-filesize": "^6.1.0",
     "typr.js": "^1.0.0"
   },
   "devDependencies": {
@@ -29,7 +28,8 @@
     "rollup-plugin-node-resolve": "^5.0.1",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-serve": "^1.0.1",
-    "rollup-plugin-uglify": "^6.0.2"
+    "rollup-plugin-uglify": "^6.0.2",
+    "rollup-plugin-filesize": "^6.1.0"
   },
   "keywords": [
     "zdog",
