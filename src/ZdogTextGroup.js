@@ -51,7 +51,7 @@ export function registerTextGroupClass(Zdog) {
       // Get text paths for each glyph
       const glyphs = this.font.getTextGlyphs(this.value, this.fontSize, 0, 0, 0, this.textAlign, this.textBaseline);
       // Convert glyphs to new shapes
-      glyphs.forEach(shape => {
+      glyphs.filter(shape => shape.path.length > 0).forEach(shape => {
         this.addChild(new Zdog.Shape({
           translate: shape.translate,
           path: shape.path,

@@ -1,5 +1,5 @@
 /*!
- * Zfont v1.2.1
+ * Zfont v1.2.2
  * Text plugin for Zdog
  * 2019 James Daniel
  * MIT Licensed 
@@ -326,7 +326,7 @@
         superclass.call(this, Object.assign({}, shapeProps,
           {closed: true,
           visible: false, // hide until font is loaded
-          path: []}));
+          path: [{}]}));
         this._font = null;
         this._value = value;
         this._fontSize = fontSize;
@@ -473,7 +473,7 @@
         // Get text paths for each glyph
         var glyphs = this.font.getTextGlyphs(this.value, this.fontSize, 0, 0, 0, this.textAlign, this.textBaseline);
         // Convert glyphs to new shapes
-        glyphs.forEach(function (shape) {
+        glyphs.filter(function (shape) { return shape.path.length > 0; }).forEach(function (shape) {
           this$1.addChild(new Zdog.Shape({
             translate: shape.translate,
             path: shape.path,
@@ -598,7 +598,7 @@
 
       return Zdog;
     },
-    version: "1.2.1",
+    version: "1.2.2",
   };
 
   return index;

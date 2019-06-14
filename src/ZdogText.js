@@ -25,7 +25,7 @@ export function registerTextClass(Zdog) {
         ...shapeProps,
         closed: true,
         visible: false, // hide until font is loaded
-        path: []
+        path: [{}]
       });
       this._font = null;
       this._value = value;
