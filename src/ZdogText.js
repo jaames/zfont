@@ -36,7 +36,14 @@ export function registerTextClass(Zdog) {
     }
 
     updateText() {
-      this.path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, this.textBaseline);
+      let path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, this.textBaseline);
+      if (path.length == 0) {
+        this.path = [{}];
+        this.visible = false;
+      } else {
+        this.path = path;
+        this.visible = true;
+      }
       this.updatePath();
     }
 

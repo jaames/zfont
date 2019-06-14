@@ -1,5 +1,5 @@
 /*!
- * Zfont v1.2.3
+ * Zfont v1.2.4
  * Text plugin for Zdog
  * 2019 James Daniel
  * MIT Licensed 
@@ -336,7 +336,14 @@ function registerTextClass(Zdog) {
     var prototypeAccessors = { font: { configurable: true },value: { configurable: true },fontSize: { configurable: true },textAlign: { configurable: true },textBaseline: { configurable: true } };
 
     ZdogText.prototype.updateText = function updateText () {
-      this.path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, this.textBaseline);
+      var path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, this.textBaseline);
+      if (path.length == 0) {
+        this.path = [{}];
+        this.visible = false;
+      } else {
+        this.path = path;
+        this.visible = true;
+      }
       this.updatePath();
     };
 
@@ -592,7 +599,7 @@ var index = {
 
     return Zdog;
   },
-  version: "1.2.3",
+  version: "1.2.4",
 };
 
 export default index;
