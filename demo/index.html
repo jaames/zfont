@@ -1,10 +1,62 @@
 <html>
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zfont</title>
+    <meta name="description" content="Zfont - a text plugin for the Zdog 3d engine">
+    <link rel="stylesheet" href="./demo.css">
     <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
     <script src="./zfont.js" charset="utf-8"></script>
   </head>
   <body>
-    <canvas class="zdog-canvas" width="888" height="480" style="background: #5222ee; cursor: pointer;"></canvas>
+    <a href="https://github.com/jaames/zfont" target="_blank" class="GithubCorner">
+      <svg class="GithubCorner__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250">
+        <path d="M0 0l115 115h15l12 27 108 108V0z"/>
+        <path class="octo-arm" d="M128 109c-15-9-9-19-9-19 3-7 2-11 2-11-1-7 3-2 3-2 4 5 2 11 2 11-3 10 5 15 9 16" style="-webkit-transform-origin: 130px 106px; transform-origin: 130px 106px"/>
+        <path class="octo-body" d="M115 115s4 2 5 0l14-14c3-2 6-3 8-3-8-11-15-24 2-41 5-5 10-7 16-7 1-2 3-7 12-11 0 0 5 3 7 16 4 2 8 5 12 9s7 8 9 12c14 3 17 7 17 7-4 8-9 11-11 11 0 6-2 11-7 16-16 16-30 10-41 2 0 3-1 7-5 11l-12 11c-1 1 1 5 1 5z"/>
+      </svg>
+    </a>
+    <main class="Page">
+      <header class="Header">
+        <h1 class="Title">Zfont</h1>
+        <h2 class="Subtitle">
+          A text plugin for the <a href="https://zzz.dog/" target="_blank">Zdog</a> 3D engine
+        </h2>  
+        <div class="ButtonGroup">
+          <a href="https://codepen.io/collection/DPKGvY/" class="Button">
+            Codepen Demos
+          </a>
+          <a href="https://github.com/jaames/zfont#installation" class="Button">
+            Get Started →
+          </a>
+        </div>
+      </header>
+      <section class="Section Section--Features">
+        <h3>Features</h3>
+        <ul class="FeatureList">
+          <li class="FeatureItem">
+            <h4>Easy to customize</h4>
+            <p>Text works like any regular Zdog shape, you can change the color, size, alignment - and update them at any time</p>
+          </li>
+          <li class="FeatureItem">
+            <h4>Use any font</h4>
+            <p>Zfont is built on top of <a href="https://github.com/photopea/Typr.js" target="_blank">Typr.js</a>, which provides rock-solid support for a wide range of .ttf and .otf fonts</p>
+          </li>
+          <li class="FeatureItem">
+            <h4>Helpful extras</h4>
+            <p>A small collection of extra utilities help with measuring text, waiting for fonts to load, and more!</p>
+          </li>
+        </ul>
+      </section>
+      <section class="Section Section--Demo">
+        <h3>Demo</h3>
+        <canvas class="Canvas" width="720" height="380"></canvas>
+        <textarea class="Textarea" name="" id="textarea" rows="3">Zfont!&#13;&#10;A text plugin for&#13;&#10;the Zdog 3D engine</textarea>    
+      </section>
+      <footer class="Footer">
+        Built by <a href="https://jamesdaniel.dev">James Daniel</a>
+      </footer>
+    </main>
     <script src="./demo.js" charset="utf-8"></script>
   </body>
 </html>

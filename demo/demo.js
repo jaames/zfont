@@ -1,43 +1,25 @@
 // Register Zfont plugin
 Zfont.init(Zdog);
 
+const textarea = document.getElementById('textarea');
+
 // create illo
 let illo = new Zdog.Illustration({
-  element: '.zdog-canvas',
+  element: '.Canvas',
   dragRotate: true,
+  resize: true,
+  rotate: {x: -0.32, y: 0.64, z: 0}
 });
-
-let anchor = new Zdog.Anchor({
-  addTo: illo
-})
 
 // create font
 let font = new Zdog.Font({
 	src: './fredokaone.ttf'
 });
 
-let title = new Zdog.Text({
-  addTo: anchor,
+let text = new Zdog.Text({
+  addTo: illo,
   font: font,
-  value: [
-    'Zfont',
-  ],
-  translate: {y: -120},
-  fontSize: 72,
-  textAlign: 'center',
-  textBaseline: 'middle',
-  color: '#fff',
-  fill: true,
-});
-
-let subtitle = new Zdog.Text({
-  addTo: anchor,
-  font: font,
-  value: [
-    'A text plugin for',
-    'the Zdog 3D engine',
-  ],
-  stroke: 0,
+  value: textarea.value,
   fontSize: 48,
   textAlign: 'center',
   textBaseline: 'middle',
@@ -46,16 +28,21 @@ let subtitle = new Zdog.Text({
 });
 
 // text "shadow"
-title.copy({
-  addTo: anchor,
-  translate: {z: -8, y: -120},
+let shadow1 = text.copy({
+  addTo: illo,
+  translate: {z: -3},
+  color: '#aab',
+});
+let shadow2 = text.copy({
+  addTo: illo,
+  translate: {z: -6},
   color: '#aab',
 });
 
-subtitle.copy({
-  addTo: anchor,
-  translate: {z: -6},
-  color: '#aab',
+textarea.addEventListener('input', function() {
+  text.value = textarea.value;
+  shadow1.value = textarea.value;
+  shadow2.value = textarea.value;
 });
 
 // animation loop
