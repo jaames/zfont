@@ -21,7 +21,7 @@ Text plugin for [Zdog](https://github.com/metafizzy/zdog)! Renders TrueType font
 
 ## Demo
 
-I'm currently working on building an interactive demo, but for the time being you find a short GIF demo on my [Twitter](https://twitter.com/rakujira/status/1134189472323702789)!
+A live demo can be found [here](https://jaames.github.io/zfont/), there's also some more in-depth examples on [Codepen](https://codepen.io/collection/DPKGvY/).
 
 ## Installation
 
