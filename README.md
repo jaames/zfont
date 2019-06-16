@@ -14,7 +14,7 @@
 
 ## Features
 
-* Built on top of [Typr.js](https://github.com/photopea/Typr.js), which supports a wide range of .ttf and .otf fonts width speed and grace
+* Built on top of [Typr.js](https://github.com/photopea/Typr.js), which supports a wide range of .ttf and .otf fonts with speed and grace
 * Less than 14kB minified and gzipped
 * No need to worry about waiting for fonts to load; text automatically pops into existence once the font is ready
 * Includes support for multiline text
@@ -96,7 +96,7 @@ Zfont.init(Zdog);
 
 ### Hello World
 
-(Pssst! If you prefer to learn by experimenting, check out the [basic demo over on Codepen](https://codepen.io/rakujira/pen/vqLBwz))
+(Pssst! If you prefer to dive in, check out the [basic demo over on Codepen](https://codepen.io/rakujira/pen/vqLBwz))
 
 To draw some text in a Zdog scene, first we need to set up a new `Zdog.Font` object with the .ttf url for our desired font, then we can create a new `Zdog.Text` object and add it to the illustration like any other shape:
 
