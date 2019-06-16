@@ -1,27 +1,39 @@
 
 <h1 align="center"><a href="https://github.com/jaames/zfont" target="blank"><img width="888" src="https://raw.githubusercontent.com/jaames/zfont/master/assets/banner.gif"/><br/>Zfont</a></h1>
 
-Text plugin for [Zdog](https://github.com/metafizzy/zdog)! Renders TrueType fonts via [Typr.js](https://github.com/photopea/Typr.js)
+<p align="center">
+<b>A text plugin for the <a href="https://github.com/metafizzy/zdog">Zdog</a> 3D engine! Renders TrueType fonts via <a href="https://github.com/photopea/Typr.js">Typr.js</a>
+</p>
 
-[Features](#features) | [Caveats](#caveats) | [Demo](#demo) | [Installation](#installation) | [Usage](#usage) | [API](#api) | [Zdog.Font](#zdogfont) | [Zdog.Text](#zdogtext) | [Zdog.TextGroup](#zdogtextgroup) | [Todo](#todo) | [Building](#building)
+<p align="center">
+<p><a href="#features">Features</a> | <a href="#caveats">Caveats</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#api">API</a> | <a href="#zdogfont">Zdog.Font</a> | <a href="#zdogtext">Zdog.Text</a> | <a href="#zdogtextgroup">Zdog.TextGroup</a> | <a href="#todo">Todo</a> | <a href="#building">Building</a></p>
+</p>
+
+<br/>
 
 ## Features
 
-* Built on top of [Typr.js](https://github.com/photopea/Typr.js), which supports a wide range of .ttf and .otf fonts and is super quick
-* Less than 14kB minified + gzipped
+* Built on top of [Typr.js](https://github.com/photopea/Typr.js), which supports a wide range of .ttf and .otf fonts width speed and grace
+* Less than 14kB minified and gzipped
 * No need to worry about waiting for fonts to load; text automatically pops into existence once the font is ready
 * Includes support for multiline text
-* Update text, color, alignment, etc at any time
+* Update font, text, color, alignment, etc at any time
 * Bonus utilities for measuring text, waiting for font load & more!
+
+<br/>
 
 ## Caveats
 
 * You have to provide a .ttf to use yourself; it isn't possible to use system fonts
-* Character range is limited to whichever glyphs are supported by your chosen font, and font stacks/fallbacks aren't supported
+* Character range is limited to whichever glyphs are supported by your chosen font, and font stacks/fallbacks aren't supported yet
+
+<br/>
 
 ## Demo
 
-A live demo can be found [here](https://jaames.github.io/zfont/), there's also some more in-depth examples on [Codepen](https://codepen.io/collection/DPKGvY/).
+A live demo can be found [here](https://jaames.github.io/zfont/), there's also some more in-depth examples on [Codepen](https://codepen.io/collection/DPKGvY/)!
+
+<br/>
 
 ## Installation
 
@@ -47,7 +59,7 @@ const Zfont = require('zfont');
 <script src="https://cdn.jsdelivr.net/npm/zfont/dist/zfont.min.js"></script>
 ```
 
-When manually including the library like this, it will be globally available on `window.Zfont`.
+When manually including the library like this, it will be globally available on `window.Zfont`
 
 ### Download and Host Yourself
 
@@ -69,21 +81,21 @@ Then add it to the `<head>` of your page with a `<script>` tag:
 </html>
 ```
 
+<br/>
+
 ## Usage
 
 ### Register Plugin
 
-After both Zdog and Zfont have been imported/downloaded, we need to initialize the Zfont plugin.
+After both Zdog and Zfont have been imported/downloaded, we need to initialize the Zfont plugin. Once the it's initialized, the `Zdog.Font`, `Zdog.Text` and `Zdog.TextGroup` classes will be available:
 
 ```js
 Zfont.init(Zdog);
 ```
 
-Once the plugin is initialized the `Zdog.Font` and `Zdog.Text` classes will be available.
+### Hello World
 
-### Basic Usage
-
-To draw some text in a Zdog scene, first we need to set up a new `Zdog.Font` object with the .ttf url for our desired font. Then we can create a new `Zdog.Text` object and add it to the illustration like any other shape.
+To draw some text in a Zdog scene, first we need to set up a new `Zdog.Font` object with the .ttf url for our desired font, then we can create a new `Zdog.Text` object and add it to the illustration like any other shape:
 
 ```js
 // Create a Zdog illustration
@@ -140,9 +152,9 @@ new Zdog.Text({
 
 ### Waiting for Fonts to Load
 
-In most cases you don't have to worry about waiting for fonts to load, as text objects will magically pop into existence once their font is ready. However, the plugin also provides a `Zdog.waitForFonts()` utility function if you need to delay anything until all the fonts in your scene have finished loading.
+In most cases you don't have to worry about waiting for fonts to load, as text objects will magically pop into existence once their font is ready for use. However, the plugin also provides a `Zdog.waitForFonts()` utility function if you need to delay anything until all the fonts in your scene have finished loading.
 
-For example, let's adapt the animation loop from the previous example so that it doesn't begin until the fonts are ready:
+For example, let's modify the animation loop from the previous example so that it doesn't begin until the fonts are ready:
 
 ```js
 // Animation loop
@@ -156,6 +168,8 @@ Zdog.waitForFonts().then(function() {
   animate();
 })
 ```
+
+<br/>
 
 ## API
 
@@ -205,8 +219,9 @@ new Zdog.Text({
   font: font,
   value: 'Hey, Zdog!',
   textAlign: 'center',
+  textBaseline: 'middle',
   color: '#5222ee',
-  stroke: 2,
+  stroke: 1,
 })
 ```
 
@@ -322,13 +337,16 @@ Zdog.waitForFonts().then(function() {
 }
 ```
 
+<br/>
+
 ## Todo
 
-* Live demo + landing page (in progress!)
-* Google Fonts support?
+* Google Fonts & Typekit integration?
 * Support for different text directions, e.g. right-to-left
-* Support for fallback fonts?
+* Support for fallback fonts
 * Support for colored (SVG) fonts
+
+<br/>
 
 ## Building
 
