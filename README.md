@@ -2,12 +2,12 @@
 <h1 align="center"><a href="https://github.com/jaames/zfont" target="blank"><img width="888" src="https://raw.githubusercontent.com/jaames/zfont/master/assets/banner.gif"/><br/>Zfont</a></h1>
 
 <p align="center">
-<b>A text plugin for the <a href="https://github.com/metafizzy/zdog">Zdog</a> 3D engine! Renders TrueType fonts via <a href="https://github.com/photopea/Typr.js">Typr.js</a>
+<b>A text plugin for the <a href="https://github.com/metafizzy/zdog">Zdog</a> 3D engine! Renders TrueType fonts via <a href="https://github.com/photopea/Typr.js">Typr.js</a> | 
 </b>
 </p>
 
 <p align="center">
-<p><a href="#features">Features</a> | <a href="#caveats">Caveats</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#api">API</a> | <a href="#zdogfont">Zdog.Font</a> | <a href="#zdogtext">Zdog.Text</a> | <a href="#zdogtextgroup">Zdog.TextGroup</a> | <a href="#todo">Todo</a> | <a href="#building">Building</a></p>
+<a href="#features">Features</a> | <a href="#caveats">Caveats</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#api">API</a> | <a href="#zdogfont">Zdog.Font</a> | <a href="#zdogtext">Zdog.Text</a> | <a href="#zdogtextgroup">Zdog.TextGroup</a> | <a href="#todo">Todo</a> | <a href="#building">Building</a>
 </p>
 
 <br/>
@@ -95,6 +95,8 @@ Zfont.init(Zdog);
 ```
 
 ### Hello World
+
+(Pssst! If you prefer to learn by experimenting, check out the [basic demo over on Codepen](https://codepen.io/rakujira/pen/vqLBwz))
 
 To draw some text in a Zdog scene, first we need to set up a new `Zdog.Font` object with the .ttf url for our desired font, then we can create a new `Zdog.Text` object and add it to the illustration like any other shape:
 
