@@ -20,3 +20,9 @@ export default {
   },
   version: VERSION,
 }
+
+if (DEV_SERVER) {
+  // add dev server flag to the window object
+  // this won't be output in production mode
+  window.isDevServer = true;
+}
