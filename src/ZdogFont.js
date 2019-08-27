@@ -19,12 +19,22 @@ export function registerFontClass(Zdog) {
       // Begin loading font file
       this._fetchFontResource(this.src)
         .then(buffer => {
-          this.font = Typr.parse(buffer);
+          const font = Typr.parse(buffer);
+          // check font fields to see if the font was parsed correctly
+          if ((!font.head) || (!font.hmtx) || (!font.hhea) || (!font.glyf)) {
+            // get a list of missing font fields (only checks for ones that zfont uses)
+            const missingFields = ['head', 'hmtx', 'hhea', 'glyf'].filter(field => !font[field]);
+            throw new Error(`Typr.js could not parse this font (unable to find ${ missingFields.join(', ') })`);
+          }
+          return font;
+        })
+        .then(font => {
+          this.font = font;
           this._hasLoaded = true;
           this._loadCallbacks.forEach(callback => callback());
         })
         .catch(err => {
-          throw new Error(`Could not load font from ${this.src}\n${err}`);
+          throw new Error(`Unable to load font from ${this.src}:\n${err}`);
         })
     }
 
@@ -240,7 +250,7 @@ export function registerFontClass(Zdog) {
             if (request.status >= 200 && request.status < 300) {
               resolve(request.response);
             } else {
-              reject(`HTTP Error ${request.status}: ${request.statusText}`);
+              reject(`HTTP error ${request.status}: ${request.statusText}`);
             }
           }
         };

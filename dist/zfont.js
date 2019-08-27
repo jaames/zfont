@@ -1,5 +1,5 @@
 /*!
- * Zfont v1.2.4
+ * Zfont v1.2.5
  * Text plugin for Zdog
  * 2019 James Daniel
  * MIT Licensed 
@@ -34,12 +34,22 @@
       // Begin loading font file
       this._fetchFontResource(this.src)
         .then(function (buffer) {
-          this$1.font = typr_js.parse(buffer);
+          var font = typr_js.parse(buffer);
+          // check font fields to see if the font was parsed correctly
+          if ((!font.head) || (!font.hmtx) || (!font.hhea) || (!font.glyf)) {
+            // get a list of missing font fields (only checks for ones that zfont uses)
+            var missingFields = ['head', 'hmtx', 'hhea', 'glyf'].filter(function (field) { return !font[field]; });
+            throw new Error(("Typr.js could not parse this font (unable to find " + (missingFields.join(', ')) + ")"));
+          }
+          return font;
+        })
+        .then(function (font) {
+          this$1.font = font;
           this$1._hasLoaded = true;
           this$1._loadCallbacks.forEach(function (callback) { return callback(); });
         })
         .catch(function (err) {
-          throw new Error(("Could not load font from " + (this$1.src) + "\n" + err));
+          throw new Error(("Unable to load font from " + (this$1.src) + ":\n" + err));
         });
     };
 
@@ -288,7 +298,7 @@
             if (request.status >= 200 && request.status < 300) {
               resolve(request.response);
             } else {
-              reject(("HTTP Error " + (request.status) + ": " + (request.statusText)));
+              reject(("HTTP error " + (request.status) + ": " + (request.statusText)));
             }
           }
         };
@@ -605,7 +615,7 @@
 
       return Zdog;
     },
-    version: "1.2.4",
+    version: "1.2.5",
   };
 
   return index;
