@@ -37,7 +37,7 @@ export function registerTextClass(Zdog) {
 
     updateText() {
       let path = this.font.getTextPath(this.value, this.fontSize, 0, 0, 0, this.textAlign, this.textBaseline);
-      if (path.length == 0) {
+      if (path.length == 0) { // zdog doesn't know what to do with empty path arrays
         this.path = [{}];
         this.visible = false;
       } else {

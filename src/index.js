@@ -12,6 +12,7 @@ export default {
       return Promise.all(Zdog.FontList.map(font => font.waitForLoad()));
     };
     
+    // Register Zfont classes onto the Zdog object
     registerFontClass(Zdog);
     registerTextClass(Zdog);
     registerTextGroupClass(Zdog);
@@ -21,8 +22,8 @@ export default {
   version: VERSION,
 }
 
+// add dev server flag to the window object
+// this will be stripped in production builds
 if (DEV_SERVER) {
-  // add dev server flag to the window object
-  // this won't be output in production mode
   window.isDevServer = true;
 }

@@ -1,6 +1,6 @@
 import Typr from 'typr.js';
 
-const TEXT_NEWLINE_REXEG = /\r?\n/;
+const TEXT_NEWLINE_REGEXP = /\r?\n/;
 
 export function registerFontClass(Zdog) {
   // Zdog.Font class
@@ -63,7 +63,7 @@ export function registerFontClass(Zdog) {
       if (!this._hasLoaded) {
         return null;
       }
-      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
+      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REGEXP);
       const font = this.font;
       const advanceWidthTable = font.hmtx.aWidth;
       const fontScale = this.getFontScale(fontSize);
@@ -120,12 +120,12 @@ export function registerFontClass(Zdog) {
       if (!this._hasLoaded) {
         return [];
       }
-      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
       const measurements = this.measureText(text, fontSize);
       const advanceWidthTable = this.font.hmtx.aWidth;
       const fontScale = this.getFontScale(fontSize);
       const lineWidths = measurements.lineWidths;
       const lineHeight = measurements.lineHeight;
+      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
       return lines.map((line, lineIndex) => {
         const glyphs = Typr.U.stringToGlyphs(this.font, line);
         let [_x, _y, _z] = this.getTextOrigin({
@@ -154,14 +154,10 @@ export function registerFontClass(Zdog) {
         case 'center':
           x -= width / 2;
           break;
-        case 'left':
         default:
           break;
       }
       switch (alignY) {
-        case 'top':
-          // y += lineHeight;
-          break;
         case 'middle':
           y -= (height / 2)  - lineHeight;
           break;
@@ -175,7 +171,7 @@ export function registerFontClass(Zdog) {
 
     // Convert Typr.js path commands to Zdog commands
     // Also apply font size scaling and coordinate adjustment
-    // https://github.com/photopea/Typr.js?utm_source=codropscollective#typruglyphtopathfont-gid
+    // https://github.com/photopea/Typr.js
     // https://zzz.dog/shapes#shape-path-commands
     _convertPathCommands(path, fontSize, x=0, y=0, z=0) {
       const yDir = -1;
@@ -184,6 +180,7 @@ export function registerFontClass(Zdog) {
       const commands = path.cmds;
       // Apply font scale to all coords
       const coords = path.crds.map(coord => coord * fontScale);
+      // Convert coords to Zdog commands
       let startCoord = null;
       let coordOffset = 0;
       return commands.map((cmd) => {
@@ -236,7 +233,7 @@ export function registerFontClass(Zdog) {
           default:
             return result;
         }
-      }).filter(cmd => cmd !== null); // filter out unneeded commands
+      }).filter(cmd => cmd !== null); // filter out null commands
     }
 
     _fetchFontResource(source) {
