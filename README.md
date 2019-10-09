@@ -2,7 +2,7 @@
 <h1 align="center"><a href="https://github.com/jaames/zfont" target="blank"><img width="888" src="https://raw.githubusercontent.com/jaames/zfont/master/assets/banner.gif"/><br/>Zfont</a></h1>
 
 <p align="center">
-<b>A text plugin for the <a href="https://github.com/metafizzy/zdog">Zdog</a> 3D engine! Renders TrueType fonts via <a href="https://github.com/photopea/Typr.js">Typr.js</a> | 
+<b>A text plugin for the <a href="https://github.com/metafizzy/zdog">Zdog</a> 3D engine! Renders TrueType fonts via <a href="https://github.com/photopea/Typr.js">Typr.js</a> | <a href="https://jaames.github.io/zfont/">jaames.github.io/zfont</a>
 </b>
 </p>
 
@@ -21,20 +21,14 @@
 * Update font, text, color, alignment, etc at any time
 * Bonus utilities for measuring text, waiting for font load & more!
 
-<br/>
-
 ## Caveats
 
 * You have to provide a .ttf to use yourself; it isn't possible to use system fonts
 * Character range is limited to whichever glyphs are supported by your chosen font, and font stacks/fallbacks aren't supported yet
 
-<br/>
-
 ## Demo
 
 A live demo can be found [here](https://jaames.github.io/zfont/), there's also some more in-depth examples on [Codepen](https://codepen.io/collection/DPKGvY/)!
-
-<br/>
 
 ## Installation
 
@@ -82,8 +76,6 @@ Then add it to the `<head>` of your page with a `<script>` tag:
 </html>
 ```
 
-<br/>
-
 ## Usage
 
 ### Register Plugin
@@ -101,6 +93,10 @@ Zfont.init(Zdog);
 To draw some text in a Zdog scene, first we need to set up a new `Zdog.Font` object with the .ttf url for our desired font, then we can create a new `Zdog.Text` object and add it to the illustration like any other shape:
 
 ```js
+// Initialize Zfont
+Zfont.init(Zdog);
+
+
 // Create a Zdog illustration
 let illo = new Zdog.Illustration({
   element: '.zdog-canvas'
@@ -131,12 +127,12 @@ animate();
 
 ### Multiline Text
 
-Both `Zdog.Text` and `Zdog.TextGroup` support multiline text. Simply insert a newline character (`\n`) wherever you wish to add a line break:
+Both `Zdog.Text` and `Zdog.TextGroup` support multiline text, by inserting a newline character (`\n`) wherever you wish to add a line break:
 
 ```js
 new Zdog.Text({
   ...
-  value: 'The quick brown fox\njumped over the\nlazy sleeping zdog',
+  value: 'The quick brown fox\njumps over the\nlazy zdog',
 });
 ```
 
@@ -147,15 +143,15 @@ new Zdog.Text({
   ...
   value: [
     'The quick brown fox'
-    'jumped over the',
-    'lazy sleeping zdog'
+    'jumps over the',
+    'lazy zdog'
   ]
 });
 ```
 
 ### Waiting for Fonts to Load
 
-In most cases you don't have to worry about waiting for fonts to load, as text objects will magically pop into existence once their font is ready for use. However, the plugin also provides a `Zdog.waitForFonts()` utility function if you need to delay anything until all the fonts in your scene have finished loading.
+In most cases you don't have to worry about waiting for fonts to load, as text objects will magically pop into existence once their font is ready to use. However, the plugin also provides a `Zdog.waitForFonts()` utility function if you need to delay anything until all the fonts in your scene have finished loading.
 
 For example, let's modify the animation loop from the previous example so that it doesn't begin until the fonts are ready:
 
@@ -166,13 +162,11 @@ function animate() {
   requestAnimationFrame(animate);
 }
 // Zdog.waitForFonts() returns a Promise which is resolved once all the fonts added to the scene so far have been loaded
-Zdog.waitForFonts().then(function() {
+Zdog.waitForFonts().then(() => {
   // Once the fonts are done, start the animation loop
   animate();
 })
 ```
-
-<br/>
 
 ## API
 
@@ -340,16 +334,12 @@ Zdog.waitForFonts().then(function() {
 }
 ```
 
-<br/>
-
 ## Todo
 
 * Google Fonts & Typekit integration?
 * Support for different text directions, e.g. right-to-left
 * Support for fallback fonts
-* Support for colored (SVG) fonts
-
-<br/>
+* Support for color (SVG) fonts
 
 ## Building
 
@@ -373,4 +363,4 @@ $ npm run build
 
 ----
 
-&copy; [James Daniel](//github.com/jaames)
+2019 [James Daniel](//github.com/jaames)
