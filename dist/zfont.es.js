@@ -1,5 +1,5 @@
 /*!
- * Zfont v1.2.6
+ * Zfont v1.2.7
  * Text plugin for Zdog
  * 2019 James Daniel
  * MIT Licensed 
@@ -122,7 +122,7 @@ function registerFontClass(Zdog) {
     if (!this._hasLoaded) {
       return [];
     }
-    var lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
+    var lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REGEXP);
     var measurements = this.measureText(text, fontSize);
     var lineWidths = measurements.lineWidths;
     var lineHeight = measurements.lineHeight;
@@ -156,7 +156,7 @@ function registerFontClass(Zdog) {
     var fontScale = this.getFontScale(fontSize);
     var lineWidths = measurements.lineWidths;
     var lineHeight = measurements.lineHeight;
-    var lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
+    var lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REGEXP);
     return lines.map(function (line, lineIndex) {
       var glyphs = typr_js.U.stringToGlyphs(this$1.font, line);
       var ref = this$1.getTextOrigin(Object.assign({}, measurements,
@@ -607,7 +607,7 @@ var index = {
 
     return Zdog;
   },
-  version: "1.2.6",
+  version: "1.2.7",
 };
 
 export default index;
