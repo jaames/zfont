@@ -100,7 +100,7 @@ export function registerFontClass(Zdog) {
       if (!this._hasLoaded) {
         return [];
       }
-      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
+      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REGEXP);
       const measurements = this.measureText(text, fontSize);
       const lineWidths = measurements.lineWidths;
       const lineHeight = measurements.lineHeight;
@@ -125,7 +125,7 @@ export function registerFontClass(Zdog) {
       const fontScale = this.getFontScale(fontSize);
       const lineWidths = measurements.lineWidths;
       const lineHeight = measurements.lineHeight;
-      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REXEG);
+      const lines = Array.isArray(text) ? text : text.split(TEXT_NEWLINE_REGEXP);
       return lines.map((line, lineIndex) => {
         const glyphs = Typr.U.stringToGlyphs(this.font, line);
         let [_x, _y, _z] = this.getTextOrigin({
