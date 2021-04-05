@@ -1,0 +1,170 @@
+@import url('https://simbo.codes/css-reset-and-normalize/reset-and-normalize.min.css');
+@import url('https://fonts.googleapis.com/css?family=Fredoka+One');
+
+body {
+  color: #000032;
+  background: #eef;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: .015em;
+  font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-rendering: optimizeLegibility;
+  -moz-font-smoothing: antialiased;
+  -moz-text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6, .Button {
+  font-family: "Fredoka One", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+a {
+  color: #645bdf;
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: .08em dashed currentColor;
+}
+
+a:hover {
+  color: #5222ee;
+}
+
+.Page {
+  width: 100%;
+  max-width: 728px;
+  margin: 0 auto;
+  padding: 3rem 12px;
+}
+
+.Header {
+  text-align: center;
+  margin: 4rem 0;
+}
+
+.Section {
+  margin: 2rem 0;
+}
+
+.Section h3 {
+  margin-bottom: 1em;
+}
+
+.Button {
+  display: inline-block;
+  background: #000032;
+  box-shadow: 0 5px 0 -2px #adadc0;
+  color: #fff;
+  padding: 0.5em 1.5em;
+  border-radius: 12px;
+  margin: 0 6px;
+  border: 0;
+  font-size: 1.2rem; 
+  transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+}
+
+.Button:hover {
+  color: #6e66e2;
+  transform: scale(1.025);
+  box-shadow: 0 8px 0 -5px #adadc0;
+}
+
+.ButtonGroup {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.ButtonGroup .Button {
+  /* flex: 1 */
+}
+
+.FeatureList {
+  padding: 0;
+  list-style-type: none;
+}
+
+.FeatureList .FeatureItem {
+  padding: 8px 0;
+}
+
+@media screen and (min-width: 700px) {
+  .FeatureList {
+    display: flex;
+    margin: 0 -8px;
+  }
+  .FeatureList .FeatureItem {
+    padding: 0 8px;
+    flex: 1;
+  }
+}
+
+.FeatureList .FeatureItem p {
+  /* font-family:  */
+}
+
+.Canvas {
+  width: 100%;
+  border-radius: 12px;
+  background: #5222ee;
+  box-shadow: 0 5px 0 -2px #8d88d6;
+  cursor: pointer;
+}
+
+.Textarea {
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
+  border: 2px solid #dde;
+  box-shadow: 0 5px 0 -2px #c3c3dd;
+  border-radius: 12px;
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 16px;
+  resize: vertical;
+}
+
+.Footer {
+  text-align: right;
+  margin: 2rem 0;
+}
+
+.GithubCorner {
+  z-index: 10;
+  border: 0;
+  display: block;
+  position: fixed;
+  top: -5px;
+  right: -5px;
+  background: transparent;
+}
+
+.GithubCorner__svg {
+  width: 100px;
+  height: 100px;
+  fill: #000032;
+  transition: transform 0.2s;
+}
+
+.GithubCorner:hover .GithubCorner__svg {
+  -webkit-transform: translate(-5px,5px);
+  transform: translate(-5px,5px);
+}
+
+.GithubCorner .octo-arm, 
+.GithubCorner .octo-body {
+ fill: #eef;
+}
