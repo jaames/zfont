@@ -80,7 +80,7 @@ Then add it to the `<head>` of your page with a `<script>` tag:
 
 ### Register Plugin
 
-After both Zdog and Zfont have been imported/downloaded, we need to initialize the Zfont plugin. Once the it's initialized, the `Zdog.Font`, `Zdog.Text` and `Zdog.TextGroup` classes will be available:
+After both Zdog and Zfont have been imported/downloaded, we need to initialize the Zfont plugin. Once it's initialized, the `Zdog.Font`, `Zdog.Text` and `Zdog.TextGroup` classes will be available:
 
 ```js
 Zfont.init(Zdog);
